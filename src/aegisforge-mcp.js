@@ -23,6 +23,18 @@ const TOOLS = [
     }
   },
   {
+    name: "aegis_r2ai_query",
+    description: "Executes AI-assisted binary analysis and queries using Radare2's r2ai / decai plugin (e.g. explain code, find vulnerabilities, or decompile).",
+    inputSchema: {
+      type: "object",
+      properties: {
+        binaryPath: { type: "string", description: "Absolute path to ELF binary or library" },
+        query: { type: "string", description: "Query or action for r2ai (e.g., '-a solve this function', '-q explain', 'decai')" }
+      },
+      required: ["binaryPath", "query"]
+    }
+  },
+  {
     name: "aegis_apk_decompile",
     description: "Decompiles Android APK or DEX to high-level Java source code using native Termux JADX.",
     inputSchema: {
@@ -111,6 +123,14 @@ async function handleToolCall(name, args) {
       const cmd = `radare2 -q -c "${args.command}" "${args.binaryPath}"`;
       const { stdout, stderr } = await execAsync(cmd, { timeout: 45000 });
       return { content: [{ type: "text", text: stdout || stderr || "Sin salida de Radare2." }] };
+    }
+
+    if (name === "aegis_r2ai_query") {
+      const isDecai = args.query.trim().startsWith("decai");
+      const r2Cmd = isDecai ? args.query : `r2ai ${args.query}`;
+      const cmd = `radare2 -q -c "${r2Cmd}" "${args.binaryPath}"`;
+      const { stdout, stderr } = await execAsync(cmd, { timeout: 60000 });
+      return { content: [{ type: "text", text: stdout || stderr || "Sin salida de r2ai/decai." }] };
     }
 
     if (name === "aegis_apk_decompile") {

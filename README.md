@@ -31,7 +31,7 @@ Diseñado bajo la filosofía del ecosistema **i-Haklab** y el skill **termux-ora
 
 ## 🚀 Características
 
-- ⚡ **Radare2 / r2mcp Nativo:** Desensamblado ultra-rápido de binarios nativos ELF/SO y análisis de flujo de control (CFG).
+- ⚡ **Radare2 / r2mcp / r2ai:** Desensamblado ultra-rápido de binarios nativos ELF/SO, análisis de flujo de control (CFG), queries de IA con `r2ai` y descompilación inteligente con `decai`.
 - ☕ **JADX & APKTool Integrado:** Decompilación instantánea de paquetes APK y DEX a código fuente Java navegable y Smali.
 - 🔬 **Motor REA Unificado:** Inspección multi-plataforma de bundles Web, empaquetados JavaScript/Electron y 168 comandos estáticos.
 - 🤖 **Servidor MCP Nativo:** Gateway universal para asistentes IA (`agy`, Claude Code, Cursor, Copilot, etc.).
@@ -89,6 +89,10 @@ aegisforge --help
 
 # Desensamblar binario y listar funciones con Radare2
 aegisforge r2 /ruta/al/binario "aaa; afl"
+
+# Análisis asistido por IA o descompilación con r2ai / decai
+aegisforge r2ai /ruta/al/binario "-q explain"
+aegisforge r2ai /ruta/al/binario "decai"
 
 # Decompilar APK a código Java con JADX
 aegisforge jadx mi_app.apk

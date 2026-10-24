@@ -18,8 +18,9 @@ AegisForge unifica las herramientas de ingeniería inversa más avanzadas de la 
 
 ## 🚀 Capacidades Principales
 
-1. **Análisis de Binarios Nativos (Radare2 / r2mcp):**
+1. **Análisis de Binarios Nativos (Radare2 / r2mcp / r2ai):**
    - Desensamblado de funciones C/C++ y Rust en arquitecturas ARM64/x86.
+   - Consultas con IA nativa y descompilación asistida vía `r2ai` y `decai`.
    - Gráficos de flujo de control (CFG) y detección de strings hardcodeados.
 2. **Decompilación Móvil (JADX & APKTool):**
    - Conversión de bytecode DEX/APK a código fuente Java navegable.
@@ -37,6 +38,10 @@ aegisforge
 
 # Desensamblar binario con Radare2
 aegisforge r2 /ruta/al/binario "aaa; afl"
+
+# Análisis asistido por IA o descompilación con r2ai/decai
+aegisforge r2ai /ruta/al/binario "-q explain"
+aegisforge r2ai /ruta/al/binario "decai"
 
 # Decompilar APK con JADX
 aegisforge jadx /ruta/a/la/app.apk

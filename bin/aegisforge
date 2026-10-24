@@ -25,6 +25,24 @@ case "$1" in
     CMD="${2:-aaa; afl}"
     radare2 -q -c "$CMD" "$BIN"
     ;;
+  r2ai)
+    shift
+    if [ -z "$1" ]; then
+      echo -e "\e[1;31m[!] Uso: aegisforge r2ai <binario> [query_o_accion]\e[0m"
+      echo -e "\e[1;33mEjemplos:\e[0m"
+      echo "  aegisforge r2ai ./binario \"-q explain\""
+      echo "  aegisforge r2ai ./binario \"-a solve this crackme\""
+      echo "  aegisforge r2ai ./binario \"decai\""
+      exit 1
+    fi
+    BIN="$1"
+    QUERY="${2:--q explain}"
+    if [[ "$QUERY" == decai* ]]; then
+      radare2 -q -c "$QUERY" "$BIN"
+    else
+      radare2 -q -c "r2ai $QUERY" "$BIN"
+    fi
+    ;;
   jadx|decompile)
     shift
     if [ -z "$1" ]; then
@@ -68,6 +86,7 @@ case "$1" in
     echo ""
     echo "Subcomandos directos:"
     echo "  r2 <binario> [cmd]       Analiza binarios ELF con Radare2 (default: 'aaa; afl')"
+    echo "  r2ai <binario> [query]   Consultas asistidas por IA con r2ai / decai"
     echo "  jadx <app.apk> [out]     Decompila APKs a código Java con JADX"
     echo "  apktool <app.apk> [out]  Extrae AndroidManifest.xml, recursos y Smali"
     echo "  rea <comando>            Invoca el motor multi-plataforma REA"
