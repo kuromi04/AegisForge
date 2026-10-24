@@ -88,8 +88,10 @@ aegisforge jadx mi_app.apk
 # Desempaquetar APK a Smali y recursos con APKTool
 aegisforge apktool mi_app.apk
 
-# Abrir el menú galáctico 3D en el navegador
+# Abrir el menú galáctico 3D en el navegador (alias: rea-menu o aegisforge-menu)
 aegisforge menu
+# O directamente:
+aegisforge-menu
 
 # Iniciar servidor MCP para agentes
 aegisforge mcp
