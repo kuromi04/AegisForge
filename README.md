@@ -23,7 +23,7 @@
 
 ## 📌 ¿Qué es AegisForge?
 
-**AegisForge** es la primera suite táctica de ingeniería inversa e inteligencia artificial para pentesting móvil que fusiona **Radare2**, **JADX**, **APKTool**, **REA** y **ADB** en un único ejecutable y servidor **MCP (Model Context Protocol)** 100% nativo para **Android ARM64 en Termux**.
+**AegisForge** es una  suite táctica de ingeniería inversa e inteligencia artificial para pentesting móvil que fusiona **Radare2**, **JADX**, **APKTool**, **REA** y **ADB** en un único ejecutable y servidor **MCP (Model Context Protocol)** 100% nativo para **Android ARM64 en Termux**.
 
 Diseñado bajo la filosofía del ecosistema **i-Haklab** y el skill **termux-oracle**, elimina la necesidad de levantar modelos locales pesados (como Ollama) que congelan dispositivos móviles, permitiendo que agentes como `agy`, `jcode`, `termuxhivebear` y `AI-Haklab` auditen binarios y APKs en tiempo real con cero sobrecarga de RAM.
 
