@@ -1,0 +1,65 @@
+#!/data/data/com.termux/files/usr/bin/bash
+# AegisForge Unified Terminal Dispatcher
+
+BASE_DIR="/data/data/com.termux/files/home/Projects/AegisForge"
+
+case "$1" in
+  mcp)
+    exec node "$BASE_DIR/src/aegisforge-mcp.js"
+    ;;
+  r2|radare2)
+    shift
+    if [ -z "$1" ]; then
+      echo -e "\e[1;31m[!] Uso: aegisforge r2 <binario> [comando_r2]\e[0m"
+      exit 1
+    fi
+    BIN="$1"
+    CMD="${2:-aaa; afl}"
+    radare2 -q -c "$CMD" "$BIN"
+    ;;
+  jadx|decompile)
+    shift
+    if [ -z "$1" ]; then
+      echo -e "\e[1;31m[!] Uso: aegisforge jadx <archivo.apk> [directorio_salida]\e[0m"
+      exit 1
+    fi
+    APK="$1"
+    OUT="${2:-$HOME/AI-Haklab-Reports/jadx_$(date +%s)}"
+    echo -e "\e[1;32m[+] Decompilando APK con JADX en: $OUT ...\e[0m"
+    jadx -d "$OUT" "$APK" --no-res
+    echo -e "\e[1;34m[✔] Decompilación completa.\e[0m"
+    ;;
+  apktool|unpack)
+    shift
+    if [ -z "$1" ]; then
+      echo -e "\e[1;31m[!] Uso: aegisforge apktool <archivo.apk> [directorio_salida]\e[0m"
+      exit 1
+    fi
+    APK="$1"
+    OUT="${2:-$HOME/AI-Haklab-Reports/apktool_$(date +%s)}"
+    echo -e "\e[1;32m[+] Desempaquetando APK con APKTool en: $OUT ...\e[0m"
+    apktool d "$APK" -o "$OUT" -f
+    echo -e "\e[1;34m[✔] Extracción de Smali y Recursos completa.\e[0m"
+    ;;
+  rea)
+    shift
+    rea "$@"
+    ;;
+  menu)
+    rea-menu
+    ;;
+  --version|-v)
+    echo "AegisForge v1.0.0 (ARM64 Mobile Reversing Suite)"
+    ;;
+  --help|-h|*)
+    echo -e "\e[1;36m=== [AEGISFORGE: Mobile Reverse Engineering Suite] ===\e[0m"
+    echo -e "Uso: \e[1;32maegisforge <subcomando> [opciones]\e[0m\n"
+    echo "Subcomandos disponibles:"
+    echo "  r2 <binario> [cmd]       Analiza binarios ELF con Radare2 (default: 'aaa; afl')"
+    echo "  jadx <app.apk> [out]     Decompila APKs a código Java con JADX"
+    echo "  apktool <app.apk> [out]  Extrae AndroidManifest.xml, recursos y Smali"
+    echo "  rea <comando>            Invoca el motor multi-plataforma REA"
+    echo "  menu                     Abre el Menú 3D Obsidian Neural en navegador"
+    echo "  mcp                      Inicia el servidor MCP unificado para IA (stdio)"
+    ;;
+esac
