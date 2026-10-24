@@ -73,8 +73,16 @@ ln -sf $(pwd)/bin/aegisforge $PREFIX/bin/aegisforge
 
 ## 🛠️ Uso desde Terminal
 
-AegisForge provee un CLI simple y directo:
+### 1. Menú Táctico Interactivo en Terminal (Rich TUI)
+Simplemente escribe:
+```bash
+aegisforge
+# O también mediante el alias directo:
+aegis-menu
+```
+Desplegará la consola táctica en tu terminal con opciones numeradas para interactuar con cada herramienta sin memorizar comandos.
 
+### 2. Comandos Directos (CLI)
 ```bash
 # Ver versión y ayuda
 aegisforge --help
@@ -88,7 +96,7 @@ aegisforge jadx mi_app.apk
 # Desempaquetar APK a Smali y recursos con APKTool
 aegisforge apktool mi_app.apk
 
-# Abrir el menú galáctico 3D en el navegador (alias: rea-menu o aegisforge-menu)
+# Abrir el menú galáctico 3D en el navegador
 aegisforge menu
 # O directamente:
 aegisforge-menu

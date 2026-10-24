@@ -3,9 +3,17 @@
 
 BASE_DIR="/data/data/com.termux/files/home/Projects/AegisForge"
 
+# Si se ejecuta sin argumentos, abrir el menú interactivo de terminal
+if [ $# -eq 0 ]; then
+    exec "$BASE_DIR/bin/aegisforge-cli-menu"
+fi
+
 case "$1" in
   mcp)
     exec node "$BASE_DIR/src/aegisforge-mcp.js"
+    ;;
+  interactive|ui|console)
+    exec "$BASE_DIR/bin/aegisforge-cli-menu"
     ;;
   r2|radare2)
     shift
@@ -45,21 +53,25 @@ case "$1" in
     shift
     rea "$@"
     ;;
-  menu)
+  menu|3d)
     rea-menu
     ;;
   --version|-v)
-    echo "AegisForge v1.0.0 (ARM64 Mobile Reversing Suite)"
+    echo "AegisForge v1.1.0 (ARM64 Mobile Reversing Suite)"
     ;;
   --help|-h|*)
     echo -e "\e[1;36m=== [AEGISFORGE: Mobile Reverse Engineering Suite] ===\e[0m"
-    echo -e "Uso: \e[1;32maegisforge <subcomando> [opciones]\e[0m\n"
-    echo "Subcomandos disponibles:"
+    echo -e "Uso: \e[1;32maegisforge [subcomando] [opciones]\e[0m\n"
+    echo "Modo interactivo:"
+    echo "  aegisforge               (sin argumentos) Abre el Menú Interactivo en la terminal"
+    echo "  aegis-menu               Acceso directo al Menú Interactivo de terminal"
+    echo ""
+    echo "Subcomandos directos:"
     echo "  r2 <binario> [cmd]       Analiza binarios ELF con Radare2 (default: 'aaa; afl')"
     echo "  jadx <app.apk> [out]     Decompila APKs a código Java con JADX"
     echo "  apktool <app.apk> [out]  Extrae AndroidManifest.xml, recursos y Smali"
     echo "  rea <comando>            Invoca el motor multi-plataforma REA"
-    echo "  menu                     Abre el Menú 3D Obsidian Neural en navegador"
+    echo "  menu / 3d                Abre el Menú 3D Obsidian Neural en navegador"
     echo "  mcp                      Inicia el servidor MCP unificado para IA (stdio)"
     ;;
 esac

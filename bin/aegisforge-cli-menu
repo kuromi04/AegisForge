@@ -1,0 +1,177 @@
+#!/data/data/com.termux/files/usr/bin/python3
+"""
+AegisForge Interactive Terminal HUD Menu
+Tactical mobile reversing console built with Rich for Termux.
+"""
+import os
+import sys
+import subprocess
+import time
+from rich.console import Console
+from rich.panel import Panel
+from rich.table import Table
+from rich.prompt import Prompt
+from rich.text import Text
+
+console = Console()
+
+BANNER = r"""
+[bold cyan]    ___   __________________ ______ ____  ____   ______ ______
+   /   | / ____/ ____/  _/ ___// ____/ __ \/ __ \ / ____// ____/
+  / /| |/ __/ / / __  / / \__ \/ /_  / / / / /_/ // / __ / __/   
+ / ___ / /___/ /_/ /_/ / ___/ / __/ / /_/ / _, _// /_/ // /___   
+/_/  |_|\____/\____//___//____/_/    \____/_/ |_| \____//_____/   [/bold cyan]
+[bold magenta]        ⚡ Native Mobile Reverse Engineering & MCP Suite ⚡[/bold magenta]
+[dim cyan]              Termux Android ARM64 • Ecosistema i-Haklab[/dim cyan]
+"""
+
+def clear():
+    os.system("clear")
+
+def show_main_menu():
+    table = Table(title="[bold yellow]CENTRO DE OPERACIONES TÁCTICO[/bold yellow]", border_style="cyan", show_lines=True)
+    table.add_column("Opción", justify="center", style="bold green", width=8)
+    table.add_column("Módulo", style="bold white", width=22)
+    table.add_column("Descripción / Capacidad", style="dim white")
+
+    table.add_row("1", "Radare2 (r2)", "Desensamblado nativo C/ASM, análisis de funciones y strings")
+    table.add_row("2", "JADX Decompiler", "Decompilación de APKs/DEX a código Java legible")
+    table.add_row("3", "APKTool Unpack", "Desempaquetado de Smali, recursos y AndroidManifest.xml")
+    table.add_row("4", "REA Engine", "Auditoría estática Web/JS, bundles y reconstrucción")
+    table.add_row("5", "Obsidian 3D Matrix", "Lanzar Menú Visual Galáctico 3D en el navegador")
+    table.add_row("6", "ADB Telemetría", "Información del dispositivo, paquetes y screenshot forense")
+    table.add_row("7", "AI-Haklab Tactical", "Iniciar agente IA con memoria Engram y control táctico")
+    table.add_row("8", "Auditar MCP Gateway", "Verificar estado y servicios MCP de AegisForge / r2mcp")
+    table.add_row("0", "Salir", "Cerrar consola táctica")
+
+    console.print(table)
+
+def handle_r2():
+    console.print(Panel("[bold cyan]Radare2 Binary Analysis[/bold cyan]", border_style="blue"))
+    target = Prompt.ask("[bold yellow]Ingresa la ruta del binario/librería .so[/bold yellow]")
+    if not target or not os.path.exists(target):
+        console.print("[bold red][!] Archivo no encontrado.[/bold red]")
+        time.sleep(1.5)
+        return
+    
+    cmd = Prompt.ask("[bold yellow]Comando r2[/bold yellow] (default: [green]aaa; afl[/green])", default="aaa; afl")
+    console.print(f"\n[bold green][+] Ejecutando:[/bold green] radare2 -q -c '{cmd}' '{target}'\n")
+    os.system(f"radare2 -q -c '{cmd}' '{target}'")
+    Prompt.ask("\n[dim]Presiona ENTER para continuar...[/dim]")
+
+def handle_jadx():
+    console.print(Panel("[bold cyan]JADX APK Decompiler[/bold cyan]", border_style="blue"))
+    apk = Prompt.ask("[bold yellow]Ingresa la ruta del archivo APK[/bold yellow]")
+    if not apk or not os.path.exists(apk):
+        console.print("[bold red][!] Archivo APK no encontrado.[/bold red]")
+        time.sleep(1.5)
+        return
+    
+    out_default = f"/data/data/com.termux/files/home/AI-Haklab-Reports/jadx_{int(time.time())}"
+    out = Prompt.ask("[bold yellow]Directorio de salida[/bold yellow]", default=out_default)
+    console.print(f"\n[bold green][+] Decompilando a Java en:[/bold green] {out}\n")
+    os.system(f"jadx -d '{out}' '{apk}' --no-res")
+    console.print(f"\n[bold green][✔] Proceso finalizado. Código disponible en: {out}[/bold green]")
+    Prompt.ask("\n[dim]Presiona ENTER para continuar...[/dim]")
+
+def handle_apktool():
+    console.print(Panel("[bold cyan]APKTool Disassembler[/bold cyan]", border_style="blue"))
+    apk = Prompt.ask("[bold yellow]Ingresa la ruta del archivo APK[/bold yellow]")
+    if not apk or not os.path.exists(apk):
+        console.print("[bold red][!] Archivo APK no encontrado.[/bold red]")
+        time.sleep(1.5)
+        return
+    
+    out_default = f"/data/data/com.termux/files/home/AI-Haklab-Reports/apktool_{int(time.time())}"
+    out = Prompt.ask("[bold yellow]Directorio de salida[/bold yellow]", default=out_default)
+    console.print(f"\n[bold green][+] Desempaquetando Smali y recursos en:[/bold green] {out}\n")
+    os.system(f"apktool d '{apk}' -o '{out}' -f")
+    console.print(f"\n[bold green][✔] Extracción completada en: {out}[/bold green]")
+    Prompt.ask("\n[dim]Presiona ENTER para continuar...[/dim]")
+
+def handle_rea():
+    console.print(Panel("[bold cyan]REA Reversing Engine[/bold cyan]", border_style="blue"))
+    console.print("[1] Diagnóstico de motores (rea doctor)")
+    console.print("[2] Analizar aplicación / binario (rea analyze)")
+    console.print("[3] Analizar bundle web (rea analyze-web-bundle)")
+    console.print("[4] Comando libre de REA")
+    choice = Prompt.ask("Selecciona una opción", choices=["1", "2", "3", "4"], default="1")
+
+    if choice == "1":
+        os.system("rea doctor")
+    elif choice == "2":
+        path = Prompt.ask("Ruta del archivo")
+        if path: os.system(f"rea analyze '{path}'")
+    elif choice == "3":
+        url = Prompt.ask("URL objetivo")
+        if url: os.system(f"rea analyze-web-bundle '{url}'")
+    elif choice == "4":
+        cmd = Prompt.ask("Comando REA completo (ej: capture-adb-screen)")
+        if cmd: os.system(f"rea {cmd}")
+    
+    Prompt.ask("\n[dim]Presiona ENTER para continuar...[/dim]")
+
+def handle_3d_menu():
+    console.print("[bold green][+] Iniciando servidor y abriendo Menú Obsidian 3D en el navegador...[/bold green]")
+    subprocess.Popen(["aegisforge-menu"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    time.sleep(1.5)
+    console.print("[bold cyan][✔] Servidor activo en http://localhost:8888[/bold cyan]")
+    Prompt.ask("\n[dim]Presiona ENTER para volver al menú de terminal...[/dim]")
+
+def handle_adb():
+    console.print(Panel("[bold cyan]ADB Mobile Telemetry[/bold cyan]", border_style="blue"))
+    console.print("[1] Ver dispositivos conectados (adb devices)")
+    console.print("[2] Propiedades del dispositivo (getprop)")
+    console.print("[3] Listar paquetes instalados de usuario")
+    console.print("[4] Capturar pantalla del dispositivo (screenshot)")
+    choice = Prompt.ask("Selecciona opción", choices=["1", "2", "3", "4"], default="1")
+
+    if choice == "1":
+        os.system("adb devices")
+    elif choice == "2":
+        os.system("adb shell getprop ro.build.version.release && adb shell getprop ro.product.cpu.abi && adb shell getprop ro.product.model")
+    elif choice == "3":
+        os.system("adb shell pm list packages -3")
+    elif choice == "4":
+        out = f"/data/data/com.termux/files/home/AI-Haklab-Reports/adb_cap_{int(time.time())}.png"
+        os.system(f"adb exec-out screencap -p > '{out}'")
+        console.print(f"[bold green][✔] Captura guardada en: {out}[/bold green]")
+
+    Prompt.ask("\n[dim]Presiona ENTER para continuar...[/dim]")
+
+def handle_mcp_audit():
+    console.print(Panel("[bold cyan]Auditoría de Servidores MCP Activos[/bold cyan]", border_style="blue"))
+    os.system("echo '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"initialize\",\"params\":{}}' | node /data/data/com.termux/files/home/Projects/AegisForge/src/aegisforge-mcp.js")
+    console.print("\n[bold green][✔] AegisForge MCP Gateway respondiendo correctamente.[/bold green]")
+    Prompt.ask("\n[dim]Presiona ENTER para continuar...[/dim]")
+
+def main():
+    while True:
+        clear()
+        console.print(BANNER)
+        show_main_menu()
+        choice = Prompt.ask("\n[bold cyan]AegisForge[/bold cyan] [bold white]❯[/bold white]", choices=["1", "2", "3", "4", "5", "6", "7", "8", "0"], default="1")
+
+        if choice == "1":
+            handle_r2()
+        elif choice == "2":
+            handle_jadx()
+        elif choice == "3":
+            handle_apktool()
+        elif choice == "4":
+            handle_rea()
+        elif choice == "5":
+            handle_3d_menu()
+        elif choice == "6":
+            handle_adb()
+        elif choice == "7":
+            clear()
+            os.system("AI-Haklab")
+        elif choice == "8":
+            handle_mcp_audit()
+        elif choice == "0":
+            console.print("[bold yellow]Cerrando sesión táctica de AegisForge. ¡Éxito en la operación![/bold yellow]")
+            break
+
+if __name__ == "__main__":
+    main()
